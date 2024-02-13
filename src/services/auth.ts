@@ -10,4 +10,10 @@ const auth = () => {
   const setAccessToken = (accessToken: any) => {
     inMemoryJWT = accessToken;
   };
+
+  return {
+    getAcessToken,
+    clearAccessToken,
+    setAccessToken,
+  };
 };
