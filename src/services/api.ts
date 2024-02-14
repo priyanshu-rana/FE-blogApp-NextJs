@@ -7,8 +7,10 @@ export const API = {
     data.append("email", email);
     data.append("password", password);
     try {
-      const response = await axios.post(`${server}/login`, data);
-    } catch (error) {}
+      await axios.post(`${server}/login`, data);
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   getAllBlogs: () =>
