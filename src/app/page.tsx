@@ -11,7 +11,7 @@ export interface BlogInterface {
 export default function Home() {
   const { data, isError, isLoading, isSuccess } = useAllBlogsQuery();
 
-  const posts = data?.map((blog: BlogInterface) => ({
+  const blogs = data?.map((blog: BlogInterface) => ({
     id: blog.id,
     title: blog.title,
     body: blog.body,
@@ -24,11 +24,11 @@ export default function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {isLoading && <h1>Blogs are loading ...</h1>}
-        {posts?.map((post: BlogInterface) => (
-          <Link key={post.id} href={`/post/${post.id}`}>
+        {blogs?.map((blog: BlogInterface) => (
+          <Link key={blog.id} href={`/blog/${blog.id}`}>
             <div className="border border-gray-300 p-4 rounded-md hover:bg-gray-100 transition">
-              <h2 className="text-xl font-bold mb-2">{post.title}</h2>
-              <p className="text-gray-700">{post.body?.slice(0, 100)}...</p>
+              <h2 className="text-xl font-bold mb-2">{blog.title}</h2>
+              <p className="text-gray-700">{blog.body?.slice(0, 100)}...</p>
             </div>
           </Link>
         ))}
