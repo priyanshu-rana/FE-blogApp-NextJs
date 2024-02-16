@@ -2,10 +2,19 @@
 
 import React from "react";
 import { Formik } from "formik";
-import { emailRegex } from "@/helpers";
-import { EmailException } from "@/constant";
+import { EmailException, PasswordException } from "@/constant";
+import * as Yup from "yup";
 
 const LoginPage = () => {
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .required(EmailException.RequiredEmailException)
+      .email(EmailException.InvalidEmailException),
+    password: Yup.string().required(
+      PasswordException.RequiredPasswordException
+    ),
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -29,24 +38,9 @@ const LoginPage = () => {
       </div>
       <Formik
         initialValues={{ email: "", password: "" }}
-        validate={(values) => {
-          const errors: { email: string; password: string } = {
-            email: "",
-            password: "",
-          };
-          if (!values.email) {
-            errors.email = EmailException.RequiredEmailException;
-          } else if (!emailRegex.test(values.email)) {
-            errors.email = EmailException.InvalidEmailException;
-          }
-          //TODO: Add validation case for Password as well
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            console.log(values);
-            setSubmitting(false);
-          }, 400);
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          console.log(values);
         }}
       >
         {({ values, errors, handleSubmit, handleChange }) => {
@@ -129,7 +123,6 @@ const LoginPage = () => {
                       <button
                         type="submit"
                         className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
-                        onClick={() => handleSubmit}
                       >
                         Sign in
                       </button>
