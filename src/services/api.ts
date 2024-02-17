@@ -13,8 +13,8 @@ export const API = {
     }
   },
 
-  getAllBlogs: () =>
-    axios
+  getAllBlogs: async () =>
+    await axios
       .get(`${server}/blog/all`)
       .then((res) => {
         return res.data;
