@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import { EmailException, PasswordException } from "@/constant";
 import * as Yup from "yup";
+import { API } from "@/services/api";
+import { redirect } from "next/navigation";
+import { observer } from "mobx-react";
+import authStore from "../../../store/authStore";
 
 const LoginPage = () => {
   const validationSchema = Yup.object().shape({
@@ -14,6 +18,14 @@ const LoginPage = () => {
       PasswordException.RequiredPasswordException
     ),
   });
+
+  useEffect(() => {
+    const session = authStore.isAuthenticated;
+    console.log("session", session);
+    if (session) {
+      redirect("/");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 px-6">
@@ -27,7 +39,7 @@ const LoginPage = () => {
           Sign in to your account
         </h2>
         <p className="mt-2 text-center text-sm leading-5 text-blue-500 max-w">
-          <span className="text-black">Or</span>{" "}
+          <span className="text-black">Or </span>
           <a
             href="#"
             className="font-medium text-blue-500 hover:text-blue-500 focus:outline-none focus:underline transition ease-in-out duration-150"
@@ -40,6 +52,7 @@ const LoginPage = () => {
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
+          API.login(values.email, values.password);
           console.log(values);
         }}
       >
@@ -138,4 +151,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default observer(LoginPage);

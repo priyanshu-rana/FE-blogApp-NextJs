@@ -1,14 +1,17 @@
 "use client";
 import { useAllBlogsQuery } from "@/hooks/useAllBlogsQuery";
 import Link from "next/link";
+import { useEffect } from "react";
+import authStore from "../../store/authStore";
+import { redirect } from "next/navigation";
+import { observer } from "mobx-react";
 export interface BlogInterface {
   id: number;
   title: string;
   body: string;
   creator: string;
 }
-
-export default function Home() {
+const Home = () => {
   const { data, isError, isLoading, isSuccess } = useAllBlogsQuery();
 
   const blogs = data?.map((blog: BlogInterface) => ({
@@ -17,6 +20,14 @@ export default function Home() {
     body: blog.body,
     creator: blog.creator,
   }));
+
+  useEffect(() => {
+    const session = authStore.isAuthenticated;
+    console.log("session", session);
+    if (!session) {
+      redirect("/login");
+    }
+  }, []);
 
   return (
     <div className="container mx-auto p-8">
@@ -35,4 +46,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default observer(Home);
