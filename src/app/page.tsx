@@ -27,7 +27,7 @@ const Home = () => {
     if (!session) {
       redirect("/login");
     }
-  }, []);
+  }, [authStore.isAuthenticated]);
 
   return (
     <div className="container mx-auto p-8">
